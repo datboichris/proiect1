@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Formular de înregistrare animale</title>
+    <style>
+        
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #ecb7b7;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        
+        .form-container {
+            background-color: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            width: 300px;
+        }
+
+        h1 {
+            text-align: center;
+            font-size: 24px;
+            color: #333;
+        }
+
+        p {
+            text-align: center;
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 20px;
+        }
+
+       
+        input, select, textarea {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-sizing: border-box;
+        }
+
+       
+        input:focus, select:focus, textarea:focus {
+            border-color: #4CAF50;
+            outline: none;
+        }
+
+       
+        button {
+            width: 48%;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            margin-top: 10px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        
+        .submit-btn {
+            background-color: #4CAF50;
+            color: white;
+        }
+
+        .submit-btn:hover {
+            background-color: #45a049;
+        }
+
+        
+        .reset-btn {
+            background-color: #f44336;
+            color: white;
+        }
+
+        .reset-btn:hover {
+            background-color: #e53935;
+        }
+
+        
+        label {
+            margin-right: 15px;
+        }
+
+        
+        .radio-group {
+            display: flex;
+            justify-content: space-between;
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="form-container">
+        <h1>Formular de înregistrare animale</h1>
+        <p>Vă rugăm să completați formularul pentru înregistrarea animalului dumneavoastra la clinică.</p>
+
+        <form action="#" method="post">
+           
+            <label for="nume-stapan">Nume stăpân:</label>
+            <input type="text" id="nume-stapan" name="nume-stapan" required>
+
+            
+            <label for="telefon">Telefon:</label>
+            <input type="text" id="telefon" name="telefon" required>
+
+            
+            <label for="nume-animal">Nume animal:</label>
+            <input type="text" id="nume-animal" name="nume-animal" required>
+
+           
+            <label for="specie">Specie:</label>
+            <select id="specie" name="specie" required>
+                <option value="caine">Câine</option>
+                <option value="pisica">Pisică</option>
+                <option value="iepure">Iepure</option>
+                <option value="altul">Altul</option>
+            </select>
+
+           
+            <label>Sexul animalului:</label>
+            <div class="radio-group">
+                <label for="mascul">
+                    <input type="radio" id="mascul" name="sex" value="mascul" required> Mascul
+                </label>
+                <label for="femela">
+                    <input type="radio" id="femela" name="sex" value="femela" required> Femelă
+                </label>
+            </div>
+
+            
+            <label>Servicii dorite:</label>
+            <label for="vaccinare">
+                <input type="checkbox" id="vaccinare" name="servicii[]" value="vaccinare"> Vaccinare
+            </label>
+            <label for="deparazitare">
+                <input type="checkbox" id="deparazitare" name="servicii[]" value="deparazitare"> Deparazitare
+            </label>
+            <label for="consult">
+                <input type="checkbox" id="consult" name="servicii[]" value="consult"> Consult
+            </label>
+
+           
+            <label for="observatii">Observații:</label>
+            <textarea id="observatii" name="observatii" rows="4" placeholder="Adăugați observații..." ></textarea>
+
+            
+            <div style="display: flex; justify-content: space-between;">
+                <button type="submit" class="submit-btn">Trimite</button>
+                <button type="reset" class="reset-btn">Resetează</button>
+            </div>
+        </form>
+    </div>
+
+</body>
+</html>
