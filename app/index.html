@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Catalog Studenți</title>
+    <style>
+        /* 1. Resetare și Stiluri Generale */
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f4f7f6; /* Gri deschis, modern */
+            color: #333;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 40px 20px;
+            margin: 0;
+        }
+
+        h1 {
+            color: #2c3e50;
+            margin-bottom: 30px;
+            font-weight: 600;
+        }
+
+        /* 2. Stiluri pentru Formular (Card) */
+        .form-container {
+            background-color: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 400px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin-bottom: 40px;
+        }
+
+        .form-container h3 {
+            margin-top: 0;
+            color: #604caf;
+            text-align: center;
+        }
+
+        /* 3. Input-uri */
+        input {
+            padding: 12px 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: #604caf;
+            box-shadow: 0 0 5px rgba(76, 175, 80, 0.2);
+        }
+
+        /* 4. Butonul */
+        button {
+            background-color: #604caf;
+            color: white;
+            padding: 12px;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.1s;
+        }
+
+        button:hover {
+            background-color: #604caf;
+        }
+
+        button:active {
+            transform: scale(0.98);
+        }
+
+        /* 5. Tabelul */
+        table {
+            width: 100%;
+            max-width: 800px;
+            border-collapse: collapse;
+            background-color: white;
+            border-radius: 10px;
+            overflow: hidden; /* Colțuri rotunjite pentru tabel */
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+        }
+
+        thead {
+            background-color: #604caf;
+            color: white;
+        }
+
+        th, td {
+            padding: 15px 20px;
+            text-align: left;
+            border-bottom: 1px solid #eee;
+        }
+
+        th {
+            font-weight: 600;
+            text-transform: uppercase;
+            font-size: 14px;
+            letter-spacing: 0.5px;
+        }
+
+        /* Efect de zebra și hover pe rânduri */
+        tbody tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+
+        tbody tr:hover {
+            background-color: #f1f1f1;
+        }
+        
+        /* Mesaj eroare */
+        .error-msg {
+            color: red;
+            font-size: 0.9em;
+            text-align: center;
+        }
+
+        /* Responsive */
+        @media (max-width: 600px) {
+            body { padding: 20px 10px; }
+            .form-container { max-width: 100%; }
+            th, td { padding: 10px; font-size: 14px; }
+        }
+    </style>
+</head>
+<body>
+
+    <h1> Catalog Studenți</h1>
+
+    <div class="form-container">
+        <h3>Adaugă un student nou</h3>
+        
+        <input type="text" id="name" placeholder="Nume și Prenume">
+        <input type="number" id="year" placeholder="Anul de studiu (1-4)" min="1" max="4">
+        <input type="number" id="grade" placeholder="Media generală" step="0.01">
+        
+        <button onclick="adaugaStudent()">Salvează Student</button>
+    </div>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Nume Student</th>
+                <th>Anul</th>
+                <th>Media</th>
+            </tr>
+        </thead>
+        <tbody id="lista-studenti">
+            </tbody>
+    </table>
+
+    <script>
+        // --- LOGICA JAVASCRIPT ---
+
+        // Funcția 1: Fetch GET
+        function incarcaStudenti() {
+            fetch('api.php')
+                .then(res => res.json())
+                .then(data => {
+                    const tabel = document.getElementById('lista-studenti');
+                    tabel.innerHTML = ''; 
+
+                    if (data.error) {
+                        tabel.innerHTML = `<tr><td colspan="3" class="error-msg">Eroare: ${data.error}</td></tr>`;
+                        return;
+                    }
+
+                    if (data.length === 0) {
+                        tabel.innerHTML = `<tr><td colspan="3" style="text-align:center; color:#888;">Nu există studenți înregistrați.</td></tr>`;
+                        return;
+                    }
+
+                    data.forEach(student => {
+                        // Colorăm media dacă este mică (sub 5)
+                        const styleNota = student.grade < 5 ? 'color: red; font-weight: bold;' : 'color: #2c3e50; font-weight: bold;';
+
+                        tabel.innerHTML += `
+                            <tr>
+                                <td>${student.name}</td>
+                                <td>Anul ${student.year}</td>
+                                <td style="${styleNota}">${student.grade}</td>
+                            </tr>
+                        `;
+                    });
+                })
+                .catch(err => console.error("Eroare la încărcare:", err));
+        }
+
+        // Funcția 2: Fetch POST
+        function adaugaStudent() {
+            const inputNume = document.getElementById('name');
+            const inputAn = document.getElementById('year');
+            const inputMedia = document.getElementById('grade');
+
+            // Validare simplă
+            if (!inputNume.value || !inputAn.value || !inputMedia.value) {
+                alert("Te rog completează toate câmpurile!");
+                return;
+            }
+
+            const studentNou = {
+                name: inputNume.value,
+                year: inputAn.value,
+                grade: inputMedia.value
+            };
+
+            const btn = document.querySelector('button');
+            btn.textContent = "Se salvează..."; // Feedback vizual
+            btn.disabled = true;
+
+            fetch('api.php', {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(studentNou)
+            })
+            .then(res => res.json())
+            .then(data => {
+                if (data.error) {
+                    alert("Eroare server: " + data.error);
+                } else {
+                    // Resetăm formularul și reîncărcăm tabelul
+                    inputNume.value = '';
+                    inputAn.value = '';
+                    inputMedia.value = '';
+                    incarcaStudenti();
+                }
+            })
+            .catch(err => {
+                console.error(err);
+                alert("Eroare la comunicarea cu serverul.");
+            })
+            .finally(() => {
+                btn.textContent = "Salvează Student";
+                btn.disabled = false;
+            });
+        }
+
+        // Pornire
+        incarcaStudenti();
+    </script>
+
+</body>
+</html>

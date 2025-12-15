@@ -1,0 +1,34 @@
+version: '3.8'
+
+services:
+  # Serviciul de Bază de Date (MySQL)
+  db:
+    image: mysql:8.0
+    container_name: student_db
+    environment:
+      # DATE HARDCODATE AICI
+      MYSQL_ROOT_PASSWORD: another_secret
+      MYSQL_DATABASE: student_catalog
+      MYSQL_USER: app_user
+      MYSQL_PASSWORD: secret_password
+    volumes:
+      - ./db/init.sql:/docker-entrypoint-initdb.d/init.sql
+      - db_data:/var/lib/mysql
+    ports:
+      - "3306:3306" 
+    restart: always
+
+  # Serviciul Web/PHP (Apache cu PHP)
+  web:
+    build: .
+    container_name: student_web
+    ports:
+      - "80:80" # Expune portul 80 pentru acces web
+    volumes:
+      - ./app:/var/www/html # Montează codul aplicației
+    depends_on:
+      - db
+    restart: always
+
+volumes:
+  db_data:
